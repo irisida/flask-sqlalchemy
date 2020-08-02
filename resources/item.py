@@ -6,7 +6,7 @@ from models.store import StoreModel
 
 class ItemList(Resource):
     def get(self):
-        return {"items": [item.json() for item in ItemModel.query.all()]}
+        return {"items": [item.json() for item in ItemModel.find_all()]}
 
 
 class Item(Resource):
@@ -35,8 +35,8 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
         item = ItemModel(name, **data)
-        store = StoreModel(data["store_id"])
-        store.save_to_db()
+        # store = StoreModel(data["store_id"])
+        # store.save_to_db()
         item.save_to_db()
         return item.json(), 201
 
