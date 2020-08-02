@@ -35,7 +35,7 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
         item = ItemModel(name, **data)
-        store = StoreModel(name, data["store_id"])
+        store = StoreModel(data["store_id"])
         store.save_to_db()
         item.save_to_db()
         return item.json(), 201
