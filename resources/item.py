@@ -34,9 +34,15 @@ class Item(Resource):
             )
 
         data = Item.parser.parse_args()
+
+        # handle the store
+        store = StoreModel.find_by_name(data["store_id"])
+        if not store:
+            store = StoreModel(data["store_id"])
+            store.save_to_db()
+
+        # handle the item
         item = ItemModel(name, **data)
-        # store = StoreModel(data["store_id"])
-        # store.save_to_db()
         item.save_to_db()
         return item.json(), 201
 
