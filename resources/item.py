@@ -37,7 +37,7 @@ class Item(Resource):
 
         # handle the store
         store = StoreModel.find_by_name(str(data["store_id"]))
-        if not store:
+        if store is None:
             store = StoreModel(str(data["store_id"]))
             store.save_to_db()
 
