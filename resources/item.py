@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required
 from models.item import ItemModel
+from models.store import StoreModel
 
 
 class ItemList(Resource):
@@ -34,7 +35,8 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
         item = ItemModel(name, **data)
-        print("DEBUG: ", item.json())
+        store = StoreModel(name, data["store_id"])
+        store.save_to_db()
         item.save_to_db()
         return item.json(), 201
 
