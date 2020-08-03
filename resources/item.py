@@ -12,10 +12,10 @@ class ItemList(Resource):
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument(
-        "price", type=float, required=True, help="The price field is required",
+        "price", type=float, required=True, help="This field cannot be left blank!"
     )
     parser.add_argument(
-        "store_id", type=int, required=True, help="The store_id field is required",
+        "store_id", type=int, required=True, help="Every item needs a store_id."
     )
 
     @jwt_required
@@ -35,15 +35,13 @@ class Item(Resource):
 
         data = Item.parser.parse_args()
 
-        # handle the store
-        # store = StoreModel.find_by_name(str(data["store_id"]))
-        # if store is None:
-        #     store = StoreModel(str(data["store_id"]))
-        #     store.save_to_db()
-
-        # handle the item
         item = ItemModel(name, **data)
-        item.save_to_db()
+
+        try:
+            item.save_to_db()
+        except:
+            return {"message": "An error occurred inserting the item."}, 500
+
         return item.json(), 201
 
     # @jwt_required
@@ -51,18 +49,20 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
         if item:
             item.delete_from_db()
-        return {"Message": "Item deleted"}
+            return {"message": "Item deleted."}
+        return {"message": "Item not found."}, 404
 
     # @jwt_required
     def put(self, name):
         data = Item.parser.parse_args()
+
         item = ItemModel.find_by_name(name)
 
-        if item is None:
-            item = ItemModel(name, **data)
-        else:
+        if item:
             item.price = data["price"]
-            item.store_id = data["store_id"]
+        else:
+            item = ItemModel(name, **data)
 
         item.save_to_db()
+
         return item.json()
