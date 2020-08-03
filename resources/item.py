@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required
 from models.item import ItemModel
+from models.store import StoreModel
 
 
 class Item(Resource):
@@ -30,8 +31,10 @@ class Item(Resource):
         data = Item.parser.parse_args()
 
         item = ItemModel(name, **data)
+        store = StoreModel(data["store_id"])
 
         try:
+            store.save_to_db()
             item.save_to_db()
         except:
             return {"message": "An error occurred inserting the item."}, 500
