@@ -36,10 +36,10 @@ class Item(Resource):
         data = Item.parser.parse_args()
 
         # handle the store
-        store = StoreModel.find_by_name(str(data["store_id"]))
-        if store is None:
-            store = StoreModel(str(data["store_id"]))
-            store.save_to_db()
+        # store = StoreModel.find_by_name(str(data["store_id"]))
+        # if store is None:
+        #     store = StoreModel(str(data["store_id"]))
+        #     store.save_to_db()
 
         # handle the item
         item = ItemModel(name, **data)
